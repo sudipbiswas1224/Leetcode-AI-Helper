@@ -1,0 +1,112 @@
+.hidden{
+    display: none;
+
+}
+.button{
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    z-index: 9999;
+    padding: 5px 10px;
+    border-radius: 4px;
+    height: 2rem;
+    width:5rem;
+    text-align: center;
+
+}
+.button:hover{
+    cursor: pointer;
+}
+.open{
+    background-color: #9DB2BF;
+    color: #27374D;
+}
+.close{
+    background-color: rgb(209, 75, 18);
+}
+.chatbox{
+    height : 70vh;
+    width: 70vw;
+    background-color: white;
+    position: fixed;
+    right: 30px;
+    bottom: 80px;
+    padding: 5px;
+    background-color: #27374D;
+    border-radius: 5px;
+}
+.ai-response{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: calc(100% - 40px);
+    /* padding: 5px 8px; */
+    background-color: #27374D;
+    color: #DDE6ED;
+    overflow-y: auto;
+}
+.input-send{
+    height: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+.user-input{
+    width: 90%;
+    padding: 3px 5px;
+    height: 40px;
+    background-color: #526D82;
+    color: #DDE6ED;
+    outline: none;
+    border-radius: 5px;
+    resize: none;
+}
+
+
+.send-btn{
+    
+    height: 90%;
+
+    
+}
+
+.user-msg {
+    align-self: flex-end;
+    background-color: lightseagreen;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 12px 12px 2px 12px;
+    margin: 4px 0;
+    max-width: 90%;
+    word-break: break-word;
+    white-space: pre-line;
+}
+
+.ai-msg {
+    align-self: flex-start;
+    background-color: #444c5c;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 12px 12px 12px 2px;
+    margin: 4px 0;
+    max-width: 90%;
+    word-break: break-word;
+    white-space: pre-line;
+}
+
+.ai-response::-webkit-scrollbar {
+    width: 8px;
+    background: #27374D; /* Match your chat background */
+}
+
+.ai-response::-webkit-scrollbar-thumb {
+    background: #526D82; /* Thumb color */
+    border-radius: 4px;
+}
+
+.ai-response::-webkit-scrollbar-thumb:hover {
+    background: #9DB2BF; /* Thumb color on hover */
+}
+

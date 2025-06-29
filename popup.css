@@ -1,0 +1,37 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body,html{
+    height: 100%;
+    width: 100%;
+}
+
+.get-api-key{
+    padding: 10px;
+    height: 200px;
+    width: 300px;
+    background-color: rgb(37, 35, 35);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    
+
+}
+.get-api-key button{
+    padding: 4px 6px;
+    background: linear-gradient(to right, rgb(177, 10, 219), rgb(123, 0, 255));
+    color: white;
+    border-radius: 5px;
+    border: none;
+
+}
+.get-api-key button:active{
+    transform: scale(0.95);
+}
+.api-key-input{
+    outline: none;
+    padding: 4px 8px;
+}

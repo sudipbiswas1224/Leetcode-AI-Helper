@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "LeetCode AI Helper",
+  "version": "1.0",
+  "description": "Get AI-powered help on LeetCode problems with chat and context.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://leetcode.com/problems/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/problems/*"],
+      "js": ["marked.min.js","content.js"],
+      "css": ["chat.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Set API Key"
+  }
+}
