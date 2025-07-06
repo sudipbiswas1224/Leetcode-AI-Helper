@@ -1,6 +1,7 @@
 let problemTitle = ''
 let problemDescription = ''
 let userCode = ''
+let chatHistory = []
 
 
 //ai-help-button funcionality 
@@ -69,12 +70,18 @@ send_btn.addEventListener('click', () => {
         renderUserMessage(userMsg);
         user_input.value = '';
 
-        //getting the prompt 
+        // Show 'AI is thinking...' placeholder
+        const thinkingMsg = document.createElement('div');
+        thinkingMsg.classList.add('ai-msg', 'thinking-msg');
+        thinkingMsg.textContent = 'AI is thinking...';
+        ai_response.appendChild(thinkingMsg);
 
+        //getting the prompt 
         chrome.storage.sync.get(['apikey'], function (result) {
             const APIKEY = result.apikey;
             const prompt = buildPrompt(userMsg);
-            callGemini(prompt, APIKEY);
+            callGemini(prompt, APIKEY, thinkingMsg); // Pass the placeholder element
+            chatHistory.push({ role: "User", content: userMsg });
         })
     }
 })
@@ -85,6 +92,8 @@ const renderUserMessage = (msg) => {
     userMsg.classList.add('user-msg');
     userMsg.textContent = msg;
     ai_response.appendChild(userMsg);
+    // Scroll to bottom
+    ai_response.scrollTop = ai_response.scrollHeight;
 }
 
 //rendering aimsg
@@ -93,6 +102,8 @@ const renderAIMessage = (msg) => {
     aiMsg.classList.add('ai-msg');
     aiMsg.innerHTML = marked.parse(msg);
     ai_response.appendChild(aiMsg);
+    // Scroll to bottom
+    ai_response.scrollTop = ai_response.scrollHeight;
 }
 
 //fetching problem context
@@ -119,24 +130,31 @@ const fetchProblemContext = () => {
 
 //building a promt
 const buildPrompt = (userMsg) => {
-    return `
-LeetCode Problem: ${problemTitle}
+    let prompt = `
+LeetCode Problem: \n${problemTitle}\n
 
-Description:
-${problemDescription}
+Description:\n
+${problemDescription}\n
 
-User's Code:
-${userCode}
+User's Code:\n
+${userCode}\n
 
-User's Question:
-${userMsg}
+User's Question:\n
+${userMsg}\n
 
-Please help the user step by step, considering the problem and their code and their query.
+Previous conversation:\n
 `;
+    chatHistory.forEach(msg => {
+        prompt += `${msg.role === 'user' ? 'user' : 'AI'}: ${msg.content}\n`
+    })
+
+    prompt += 'Please continue the conversation and help the user to solve his problem according to his query and give user query specific reply'
+
+    return prompt;
 };
 
 //calling the API
-const callGemini = (prompt, apiKey) => {
+const callGemini = (prompt, apiKey, thinkingMsg) => {
     fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: {
@@ -146,15 +164,22 @@ const callGemini = (prompt, apiKey) => {
             contents: [{ parts: [{ text: prompt }] }]
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        // Gemini's response structure is different from OpenAI's
-        const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response from Gemini.";
-        renderAIMessage(aiReply);
-    })
-    .catch(error => {
-        renderAIMessage("Error: Could not get a response from Gemini.");
-        console.error(error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            // Gemini's response structure is different from OpenAI's
+            const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response from Gemini.";
+            if (thinkingMsg && thinkingMsg.parentNode) {
+                thinkingMsg.parentNode.removeChild(thinkingMsg);
+            }
+            chatHistory.push({ role: "AI", content: aiReply })
+            renderAIMessage(aiReply);
+        })
+        .catch(error => {
+            if (thinkingMsg && thinkingMsg.parentNode) {
+                thinkingMsg.parentNode.removeChild(thinkingMsg);
+            }
+            renderAIMessage("Error: Could not get a response from Gemini.");
+            console.error(error);
+        });
 };
 
