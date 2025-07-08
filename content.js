@@ -144,9 +144,11 @@ ${userMsg}\n
 
 Previous conversation:\n
 `;
-    chatHistory.forEach(msg => {
-        prompt += `${msg.role === 'user' ? 'user' : 'AI'}: ${msg.content}\n`
-    })
+    if (chatHistory.length) {
+        chatHistory.forEach(msg => {
+            prompt += `${msg.role === 'user' ? 'user' : 'AI'}: ${msg.content}\n`
+        })
+    }
 
     prompt += 'Please continue the conversation and help the user to solve his problem according to his query and give user query specific reply'
 
